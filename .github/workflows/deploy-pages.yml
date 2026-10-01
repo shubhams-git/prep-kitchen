@@ -1,7 +1,7 @@
 name: Publish Prep Kitchen to GitHub Pages
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,12 +19,14 @@ jobs:
         with:
           node-version: '22'
       - name: Enable pnpm
-        run: corepack enable
+        uses: pnpm/action-setup@v6
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Check TypeScript
+        run: pnpm typecheck
       - name: Build static website
         env:
           GITHUB_PAGES: 'true'
